@@ -3,14 +3,16 @@ import Registration from '../pages/Cadastro';
 import Dashboard from '../pages/Dashboard';
 import Login from '../pages/Login';
 
-// import Registration from '../pages/Cadastro';
 function RoutesMain (){
+
+  return( 
     <Routes>
-        {/* <Route path='/' element={<Dashboard/>}></Route> */}
-        <Route path='/login' element={<h1>drdrx</h1>}/>
-        {/* <Route path='/Cadastro' element={<Registration/>}></Route> */}
+        <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/cadastro' element={<Registration/>}/>
         <Route path='*' element={<Navigate to='/login'/>}/>  
     </Routes>
+  )
 }
 
 export default RoutesMain;

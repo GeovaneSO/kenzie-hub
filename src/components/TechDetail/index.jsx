@@ -3,18 +3,16 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
-import { TechContext } from "../../contexts/TechContext";
 import Button from "../Button";
 import api from "../../Api";
-import { Container, Form } from "./styles";
+import { Container } from "./style";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-function AddModal(){
-    const {tech, setTech, details, setDetails, deleteTech, click, setClick, openModal2, openModal1, user, setList, list, reload, setReload} = useContext(UserContext);
+function TechDetail(){
+    const {tech, setTech, details, techs, setTechs,setDetails, deleteTech, click, setClick,openModal2, openModal1, user, setList, list, reload, setReload} = useContext(UserContext);
     
     const formSchema = yup.object({
-        title: yup.string().required('Titulo da tecnologia é obrigatório.'),
         status: yup.string().required('Selecione o nível de habilidade')
     });
 
@@ -22,37 +20,39 @@ function AddModal(){
         resolver: yupResolver(formSchema)
     });
 
-    async function addTech (data){
-        const response = await api.post('/users/techs', data).catch(() => toast.error('Tecnologia existente'));
-        // console.log(response)
-        setTech(response.data)
+    async function updateTech (data){
+        const response = await api.put(`/users/techs/${tech.id}`, data).catch((error) => console.log(error));
 
         if(response.status === 201) {
             setReload(!reload);
-            toast('Tecnologia cadastrada!');
+            toast('Status atualizado');
+
+        } else {
+
+            toast('Ops! Ocorreu um problema.')
 
         }
     }
+    // console.log(tech)
     
     return(
         <Container>
-            <form onSubmit={handleSubmit(addTech)}>
+            <form onSubmit={handleSubmit(updateTech)}>
                 <div className="box__title">
-                    <h2>Cadastrar Tecnologia</h2>
-                    <Button type={'button'} onClick={openModal1}>x</Button>
+                    <h2>Tecnologia Detalhes</h2>
+                    <Button type={'button'} onClick={openModal2}>x</Button>
                 </div>
                 <div className='box__input'>
-                    <label htmlFor="name">Nome</label>
+                    <label htmlFor="name">Nome do projeto</label>
                     <input 
-                        {...register('title')}
-                        placeholder='Insira uma tecnologia'
-                        type='text'
-                        id='tech'
+                        disabled="true"
+                        placeholder={tech.title}
+                        type="text"
+                        id="tech"
                     />
-                <span>{errors.title?.message}</span>
                 </div>
                 <div className='box__select'>
-                    <label htmlFor="status">Selecionar status</label>
+                    <label htmlFor="status">Status</label>
                     
                     <select  
                         {...register('status')}
@@ -65,10 +65,15 @@ function AddModal(){
                     <span>{errors.status?.message}</span>
                 </div>
                 <div className='box__button'>
-                    <Button type={'submit'}>Cadastrar Tecnologia</Button>
+                    <Button 
+                        className='btn__save'
+                        type={'submit'}>Salvar alterações</Button>
+                    <Button
+                        className='btn__delete'
+                        onClick={() => deleteTech(tech.id)}>Excluir</Button>
                 </div>
             </form>
         </Container>
     );
 }
-export default AddModal;
+export default TechDetail;

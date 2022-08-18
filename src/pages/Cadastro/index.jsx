@@ -1,13 +1,12 @@
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Nav from '../../components/Nav';
 import { Container } from './styles';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../Api';
+import { ToastContainer, toast } from 'react-toastify';
 import Button from '../../components/Button';
-import axios from 'axios';
+import api from '../../Api';
 
 function Registration(){
     const formSchema = yup.object({
@@ -23,32 +22,21 @@ function Registration(){
     const {register, handleSubmit, formState:{errors}} = useForm({
         resolver: yupResolver(formSchema)
     });
-    /**
-     {id: '8dd405fb-d6f4-42d2-b31e-b5375874c4b0', name: 'Geovane', email: 'Geovane@gmail.com', course_module: 'Primeiro módulo (Introdução ao Frontend)', bio: 'Estudante Frontend', …}
-        avatar_url: null
-        bio: "Estudante Frontend"
-        contact: "linkedin.com/in/geovane-oliveira-69071a225"
-        course_module: "Primeiro módulo (Introdução ao Frontend)"
-        created_at: "2022-08-07T17:41:35.637Z"
-        email: "Geovane@gmail.com"
-        id: "8dd405fb-d6f4-42d2-b31e-b5375874c4b0"
-        name: "Geovane"
-        updated_at: "2022-08-07T17:41:35.637Z"
-        [[Prototype]]: Object
-     */
-    const navigate = useNavigate()
-    function callBack(data){
-        // https://kenziehub.herokuapp.com
-        console.log({...data});
-        axios.post('https://kenziehub.herokuapp.com/users', data)
-            .then((response) => console.log(response.data))
-            .catch((error) => console.log(error));   
-        navigate('/login', {replace:true});
+    
+    const navigate = useNavigate();
+
+    async function callBack(data){
+        const response = await api.post('/users', data).catch((error) =>  toast.error('Ops! Conta já cadastrada'));
+        
+        const {status} = response;
+
+        if(status === 201){
+            toast.success('Conta criada com sucesso!')
+            setTimeout(() => {
+                navigate('/login', {replace:true});
+              }, 5000);
+        }
     }
-    // axios.get('https://kenziehub.herokuapp.com/users')
-    // .then((response) => {
-    //   console.log(response);
-    // })
   
     return(
         <Container className='container'>
@@ -140,9 +128,8 @@ function Registration(){
                     <Button type={'submit'}>Cadastrar</Button>
                 </div>
             </form>   
-
+            <ToastContainer/>
         </Container>
-
-    )
+    );
 }
 export default Registration;

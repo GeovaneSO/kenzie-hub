@@ -7,29 +7,13 @@ import * as yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from '../../components/Button';
 import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/react-toastify'
 import { Container } from './styles';
 import logo from '../../Logo.svg'
 
-function Login({setUser}){
-    const {signIn} = useContext(UserContext);
-    
-    // console.log(user)
-    // const notify = () => {
-    //     toast('oi');
-    //     toast.success('sucesso', {
-    //         position: toast.POSITION.TOP_RIGHT
-    //     });
-    //     toast.error('erro', {
-    //         position: toast.POSITION.TOP_RIGHT
-    //     });
-    //     toast.warn('warning', {
-    //         position: toast.POSITION.TOP_RIGHT
-    //     });
-    //     toast.info('info', {
-    //         position: toast.POSITION.TOP_RIGHT
-    //     })
-    // }
+function Login(){
+    const {signIn, token} = useContext(UserContext);
+
+    token && localStorage.clear()
 
     const formSchema = yup.object({
         email: yup.string().email('Email inválido!').required('Email é obrigatório.'),
@@ -39,25 +23,6 @@ function Login({setUser}){
     const {register, handleSubmit, formState:{errors}} = useForm({
         resolver: yupResolver(formSchema)
     });
-
-    // const navigate = useNavigate();
-
-    // async function signIn(data){
-        // console.log({...data});
-        // console.log(response)
-
-        // axios.post('https://kenziehub.herokuapp.com/sessions', {...data}).then((response) => {
-            
-        //     console.log(response);
-        //     setUser(response.data.user);
-
-        //     window.localStorage.clear();
-        //     window.localStorage.setItem('token', response.data.token);
-        //     window.localStorage.setItem('user_id', response.data.user.id);
-        //     notify()
-        //     navigate('/home', { replace: true });
-        // });
-    // }
 
     return(
         <Container className='container'>
@@ -70,6 +35,7 @@ function Login({setUser}){
                     <label htmlFor={"email"}>Email</label>
                     <input 
                         {...register('email')}
+                        placeholder='Insira seu Email'
                         type={'text' }
                         id={'email'}
                     />
@@ -80,6 +46,7 @@ function Login({setUser}){
                     <label htmlFor={"password"}>Senha</label>
                     <input 
                         {...register('password')}
+                        placeholder='Insira sua senha'
                         id={'password'}
                         type={'password'}
                     />
@@ -93,7 +60,6 @@ function Login({setUser}){
                 
                 <div className='box__link'>
                     <Link className='a' to='/cadastro'>Cadastre-se</Link>
-
                 </div>
             </form>
             <ToastContainer/>
