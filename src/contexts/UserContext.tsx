@@ -139,16 +139,20 @@ function Providers({children}: UserProps){
     }
 
     async function updateTech (data: Technology){
-        const response: any = await api.put(`/users/techs/${tech.id}`, data).catch((error) => toast.error('Ops! Ocorreu um problema.'));
+        const response: Technology = await api.put(`/users/techs/${tech.id}`, data)
         
-        if(response.status === 201) {
-            setReload(!reload);
-            toast.success('Status atualizado');
+        if(response){
+            if(Number(response.status) === 201) {
+                setReload(!reload);
+                toast.success('Status atualizado');
 
+            } else {
+
+                toast.error('Ops! Ocorreu um problema.')
+
+            }
         } else {
-
             toast.error('Ops! Ocorreu um problema.')
-
         }
     }
 
