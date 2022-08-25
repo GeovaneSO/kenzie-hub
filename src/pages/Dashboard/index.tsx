@@ -1,9 +1,7 @@
 import { Container } from "./styles";
-import { UserContext } from "../../contexts/UserContext";
-import { TechContext } from "../../contexts/TechContext";
+import  {Context } from "../../contexts/UserContext";
 import Nav from "../../components/Nav";
-import { useEffect, useState, useContext } from 'react';
-import { useNavigate, Link, useParams, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import AddModal from "../../components/AddModal";
 import TechDetail from "../../components/TechDetail";
 import { ToastContainer, toast } from 'react-toastify';
@@ -11,7 +9,7 @@ import Button from "../../components/Button";
 import List from "../../components/List";
 
 function Dashboard(){
-    const {details, loading,setDetails, deleteTech, click, setClick, openModal2, openModal1, user, setList, list, reload, setReload} = useContext(UserContext);
+    const {details, click, openModal1, user} = Context();
     // const { click, openModal1, details, setDetails } = useContext(TechContext);
     // if(loading) return <div>Carregando...</div>
     // console.log(user)

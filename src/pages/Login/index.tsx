@@ -1,17 +1,17 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useState, useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
+import { Context, UserContext,IUser } from '../../contexts/UserContext';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from '../../components/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import { Container } from './styles';
-import logo from '../../Logo.svg'
+import logo from './Logo.svg'
 
 function Login(){
-    const {signIn, token} = useContext(UserContext);
+    const {signIn, token} = Context();
 
     token && localStorage.clear()
 
@@ -20,7 +20,7 @@ function Login(){
         password: yup.string().min(6, 'Mínimo 6 caracteres').required('Senha obrigatória')
     });
     
-    const {register, handleSubmit, formState:{errors}} = useForm({
+    const {register, handleSubmit, formState:{errors}} = useForm<IUser>({
         resolver: yupResolver(formSchema)
     });
 

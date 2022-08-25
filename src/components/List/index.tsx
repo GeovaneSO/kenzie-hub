@@ -1,6 +1,5 @@
 import { useContext } from "react";
-import { UserContext } from "../../contexts/UserContext";
-import { TechContext } from "../../contexts/TechContext";
+import { UserContext,Context } from "../../contexts/UserContext";
 import Button from "../Button";
 import { ListMain, BoxH2 } from "./style";
 // import { BoxH2 } from "./style";
@@ -8,9 +7,9 @@ import { FiMoreHorizontal,FiTrash2 } from 'react-icons/fi'
 
 
 function List (){
-    const {details, setDetails, deleteTech, click, setClick,openModal2, openModal1, user, setList, list, reload, setReload} = useContext(UserContext);
-    // const {click, setClick, openModal2, details, setDetails, deleteTech} = useContext(TechContext);
-console.log(list)
+    const { deleteTech, openModal2, list} = Context();
+
+    // console.log(deleteTech)
     return(
         <ListMain>
             {

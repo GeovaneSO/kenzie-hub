@@ -1,45 +1,32 @@
 import { useForm } from "react-hook-form"
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useContext } from "react";
-import { UserContext } from "../../contexts/UserContext";
-import { TechContext } from "../../contexts/TechContext";
+import { useContext, ReactNode } from "react";
+import { UserContext,Context, IUser, Technology } from '../../contexts/UserContext'
 import Button from "../Button";
 import api from "../../Api";
-import { Container, Form } from "./styles";
+import { Container } from "./styles";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function AddModal(){
-    const {tech, setTech, details, setDetails, deleteTech, click, setClick, openModal2, openModal1, user, setList, list, reload, setReload} = useContext(UserContext);
+    const { addTech, openModal1} = Context();
     
     const formSchema = yup.object({
         title: yup.string().required('Titulo da tecnologia é obrigatório.'),
         status: yup.string().required('Selecione o nível de habilidade')
     });
 
-    const {register, handleSubmit, formState:{errors}} = useForm({
+    const {register, handleSubmit, formState:{errors}} = useForm<Technology>({
         resolver: yupResolver(formSchema)
     });
-
-    async function addTech (data){
-        const response = await api.post('/users/techs', data).catch(() => toast.error('Tecnologia existente'));
-        // console.log(response)
-        setTech(response.data)
-
-        if(response.status === 201) {
-            setReload(!reload);
-            toast('Tecnologia cadastrada!');
-
-        }
-    }
     
     return(
         <Container>
             <form onSubmit={handleSubmit(addTech)}>
                 <div className="box__title">
                     <h2>Cadastrar Tecnologia</h2>
-                    <Button type={'button'} onClick={openModal1}>x</Button>
+                    <Button type={'button'} onClick={openModal1} >x</Button>
                 </div>
                 <div className='box__input'>
                     <label htmlFor="name">Nome</label>
@@ -65,7 +52,7 @@ function AddModal(){
                     <span>{errors.status?.message}</span>
                 </div>
                 <div className='box__button'>
-                    <Button type={'submit'}>Cadastrar Tecnologia</Button>
+                    <Button type={'submit'} id={""} className={"btn"}>Cadastrar Tecnologia</Button>
                 </div>
             </form>
         </Container>

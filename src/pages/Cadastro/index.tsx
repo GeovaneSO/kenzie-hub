@@ -7,6 +7,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import Button from '../../components/Button';
 import api from '../../Api';
+import { IUser } from '../../contexts/UserContext'
 
 function Registration(){
     const formSchema = yup.object({
@@ -19,18 +20,16 @@ function Registration(){
         course_module: yup.string().required('Selecione o módulo')
     });
 
-    const {register, handleSubmit, formState:{errors}} = useForm({
+    const {register, handleSubmit, formState:{errors}} = useForm<IUser>({
         resolver: yupResolver(formSchema)
     });
     
     const navigate = useNavigate();
 
-    async function callBack(data){
-        const response = await api.post('/users', data).catch((error) =>  toast.error('Ops! Conta já cadastrada'));
+    async function callBack(data: IUser){
+        const response: any = await api.post('/users', data).catch((error) =>  toast.error('Ops! Conta já cadastrada'));
         
-        const {status} = response;
-
-        if(status === 201){
+        if(response.status === 201){
             toast.success('Conta criada com sucesso!')
             setTimeout(() => {
                 navigate('/login', {replace:true});

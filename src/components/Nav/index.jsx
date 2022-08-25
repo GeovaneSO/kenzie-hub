@@ -1,5 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom';
-import logo from '../../Logo.svg'
+import logo from './Logo.svg'
 import { NavBar } from './styles'
 function Nav(){
     
