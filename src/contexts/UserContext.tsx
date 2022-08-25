@@ -74,6 +74,7 @@ interface UserProviderData{
     setReload: Function;
     token: string | null;
 
+    userRegister: (data: IUser) => void;
     deleteTech: (id: string) => void;
     addTech: (tech: Technology) => void;
     updateTech: (data: Technology) => void;
@@ -91,6 +92,17 @@ function Providers({children}: UserProps){
     const [ tech, setTech ]       = useState<Technology>({} as Technology)
     
     const navigate = useNavigate();
+
+    async function userRegister (data: IUser){
+        const response: any = await api.post('/users', data).catch((error) =>  toast.error('Ops! Conta já cadastrada'));
+        
+        if(response.status === 201){
+            toast.success('Conta criada com sucesso!')
+            setTimeout(() => {
+                navigate('/login', {replace:true});
+              }, 5000);
+        }
+    }
     
     function openModal1 (){        
         setClick(!click);
@@ -110,7 +122,7 @@ function Providers({children}: UserProps){
 
         if(response.status === 201) {
             setReload(!reload);
-            toast('Tecnologia cadastrada!');
+            toast.success('Tecnologia cadastrada!');
         }
     }
 
@@ -193,7 +205,7 @@ function Providers({children}: UserProps){
     }
     
     return(
-        <UserContext.Provider value={{tech, setTech, click, setClick, details, setDetails, setUser, openModal1, openModal2, updateTech,deleteTech, addTech,user, setLoading, loading, signIn, list, setList, reload, setReload, token }}>
+        <UserContext.Provider value={{tech, setTech, click, setClick, details, userRegister, setDetails, setUser, openModal1, openModal2, updateTech,deleteTech, addTech,user, setLoading, loading, signIn, list, setList, reload, setReload, token }}>
             {children}
         </UserContext.Provider>
     );

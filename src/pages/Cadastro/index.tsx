@@ -3,13 +3,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Nav from '../../components/Nav';
 import { Container } from './styles';
-import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import Button from '../../components/Button';
-import api from '../../Api';
-import { IUser } from '../../contexts/UserContext'
+import { IUser, Context } from '../../contexts/UserContext'
 
 function Registration(){
+    const {userRegister} = Context();
+
     const formSchema = yup.object({
         name: yup.string().required('Insira seu nome completo.'),
         email: yup.string().email('Email inválido!').required('Email é obrigatório.'),
@@ -23,24 +23,11 @@ function Registration(){
     const {register, handleSubmit, formState:{errors}} = useForm<IUser>({
         resolver: yupResolver(formSchema)
     });
-    
-    const navigate = useNavigate();
-
-    async function callBack(data: IUser){
-        const response: any = await api.post('/users', data).catch((error) =>  toast.error('Ops! Conta já cadastrada'));
-        
-        if(response.status === 201){
-            toast.success('Conta criada com sucesso!')
-            setTimeout(() => {
-                navigate('/login', {replace:true});
-              }, 5000);
-        }
-    }
   
     return(
         <Container className='container'>
             <Nav/>
-            <form onSubmit={handleSubmit(callBack)}>
+            <form onSubmit={handleSubmit(userRegister)}>
                 <h2>Crie sua conta</h2>
                 <span>Rápido e grátis, vamos nessa</span>
                 <div className='box__input'>
